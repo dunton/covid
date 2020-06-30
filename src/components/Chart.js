@@ -36,7 +36,7 @@ const Chart = ({ data }) => {
     setDeaths(totalDeaths / days);
     setCaseData(casesArr);
     setDeathData(deathsArr);
-  }, []);
+  }, [data]);
 
   console.log("deaths", deaths);
   console.log("cases", cases);
@@ -81,10 +81,10 @@ const Chart = ({ data }) => {
                 <LineSeries color="blue" data={deathData} />
                 <XAxis
                   title="Date"
-                  tickTotal={14}
+                  tickTotal={7}
                   tickFormat={(val) => formatXAxis(val)}
                 />
-                <YAxis title="Cases" />
+                <YAxis title="Deaths" />
               </XYPlot>
               <DiscreteColorLegend
                 items={[
@@ -96,7 +96,7 @@ const Chart = ({ data }) => {
               />
             </div>
             <div>
-              <h6>Cases: {Math.round(cases)}</h6>
+              <h6>Cases a day the previous 2 weeks: {Math.round(cases)}</h6>
               <h6>Average deaths a day last 7 days: {Math.round(deaths)}</h6>
             </div>
           </div>

@@ -6,9 +6,8 @@ import Chart from "./Chart";
 
 function App() {
   const apiUrl = "https://covidtracking.com/api/v1";
-  let [states, setStates] = useState("");
+  let [states, setStates] = useState([]);
   let [activeState, setActiveState] = useState(null);
-  let [dropdownActive, toggleDropdownActive] = useState(false);
   let [stateData, setStateData] = useState([]);
 
   useEffect(() => {
@@ -20,7 +19,6 @@ function App() {
 
   const handleStateClick = (state) => {
     setActiveState(state);
-    toggleDropdownActive(false);
     getStateData(state);
   };
 
@@ -41,38 +39,41 @@ function App() {
   return (
     <Container>
       <div>
-        <div onClick={() => toggleDropdownActive(!dropdownActive)}>
-          {activeState || "Select a state"}
+        <div className="select-state">{activeState || "Select a state"}</div>
+        <div className="dropdown">
+          {states.map(({ state }, i) => (
+            <div key={i} onClick={() => handleStateClick(state)}>
+              {state}
+            </div>
+          ))}
         </div>
-        {dropdownActive && (
-          <div className="dropdown">
-            {states.map(({ state }, i) => (
-              <div key={i} onClick={() => handleStateClick(state)}>
-                {state}
-              </div>
-            ))}
-          </div>
-        )}
       </div>
-      <div>{stateData.length && <Chart data={stateData} />}</div>
+      <div>{stateData.length > 0 && <Chart data={stateData} />}</div>
     </Container>
   );
 }
 
 const Container = styled.div`
   margin: 10px;
+  .select-state {
+    text-align: center;
+    cursor: pointer;
+    margin: 20px 0;
+  }
   .dropdown {
-    max-height: 200px;
-    overflow-y: auto;
+    max-width: 80%;
+    overflow-x: auto;
     min-width: 40px;
-    display: inline-block;
+    display: flex;
     background: grey;
+    margin: auto;
 
     div {
       padding: 5px 10px;
-      border-top: 1px solid white;
-      border-bottom: 1px solid white;
+      border-left: 1px solid white;
+      border-right: 1px solid white;
       font-size: 20px;
+      cursor: pointer;
     }
   }
 `;
