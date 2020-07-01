@@ -13,6 +13,7 @@ const Chart = ({ data, activeState }) => {
   let [cases, setCases] = useState(null);
   let [caseData, setCaseData] = useState(null);
   let [deathData, setDeathData] = useState(null);
+  let [showData, toggleShowData] = useState(false);
 
   useEffect(() => {
     let totalCases = 0;
@@ -23,7 +24,6 @@ const Chart = ({ data, activeState }) => {
 
     data.forEach((day, i) => {
       let date = day.date.toString();
-
       if (i < 7) {
         totalDeaths += day.deathIncrease;
         deathsArr.push({ x: date, y: day.deathIncrease });
@@ -38,8 +38,6 @@ const Chart = ({ data, activeState }) => {
     setDeathData(deathsArr);
   }, [data]);
 
-  console.log(caseData);
-
   const formatDate = (val) => {
     val = val.toString().substring(4);
     val = val.substring(0, 2) + "/" + val.substring(2);
@@ -47,6 +45,11 @@ const Chart = ({ data, activeState }) => {
   };
 
   const chartWidth = window.innerWidth > 978 ? 900 : window.innerWidth * 0.9;
+  const toggleData = () => {
+    toggleShowData(!showData);
+  };
+
+  console.log(data);
 
   return (
     <Container>
@@ -102,7 +105,7 @@ const Chart = ({ data, activeState }) => {
               <table>
                 <thead>
                   <tr>
-                    <th>Cases a day the previous 2 weeks</th>
+                    <th>Average cases a day the previous 2 weeks</th>
                     <th>Average deaths a day last 7 days</th>
                   </tr>
                 </thead>
@@ -114,6 +117,53 @@ const Chart = ({ data, activeState }) => {
                 </tbody>
               </table>
             </div>
+            <div>
+              <div onClick={toggleData} className="button-holder">
+                <button className="btn btn-primary">
+                  {showData ? "hide data" : "show more data"}
+                </button>
+                <div>
+                  {showData && (
+                    <>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Cases</th>
+                            <th>Deaths</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.map(
+                            ({ date, positiveIncrease, deathIncrease }, i) => {
+                              return (
+                                <tr key={i}>
+                                  <td>{formatDate(date)}</td>
+                                  <td>{positiveIncrease}</td>
+                                  <td>{deathIncrease}</td>
+                                </tr>
+                              );
+                            }
+                          )}
+                        </tbody>
+                      </table>
+                      <table>
+                        <thead>
+                          <th>Cumulative State Cases</th>
+                          <th>Cumulative State Deaths</th>
+                        </thead>
+                        <tbody>
+                          <tr className="total-row">
+                            <td>{data[0].positive}</td>
+                            <td>{data[0].death}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -122,9 +172,14 @@ const Chart = ({ data, activeState }) => {
 };
 
 const Container = styled.div`
-  h3 {
+  h3,
+  h6 {
     text-align: center;
     margin: 50px auto;
+  }
+  .button-holder {
+    text-align: center;
+    margin: 0 auto 50px;
   }
   .charts {
     margin: 25px auto;
@@ -138,6 +193,11 @@ const Container = styled.div`
     th,
     td {
       text-align: center;
+    }
+
+    .total-row {
+      border-top: 3px solid black;
+      text-align: left;
     }
   }
 `;
