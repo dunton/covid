@@ -49,6 +49,16 @@ function App() {
       <div>
         <div className="select-state">
           <h6>Select a state</h6>
+          <p>
+            Data from{" "}
+            <a
+              href="https://covidtracking.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              The COVID Tracking Project
+            </a>
+          </p>
         </div>
         <div className="dropdown">
           {states.map(({ state }, i) => (
@@ -96,6 +106,15 @@ const Container = styled.div`
   h1 {
     text-align: center;
     margin: 50px 0;
+  }
+
+  p {
+    text-align: center;
+  }
+
+  a {
+    color: #26a69a;
+    text-decoration: underline;
   }
 `;
 
